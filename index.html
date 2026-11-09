@@ -58,7 +58,7 @@ h1 em{display:block;font-style:normal;color:var(--gold-hi)}
 fieldset{border:0;margin:0;padding:0;display:grid;gap:14px}
 fieldset+fieldset{margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
 legend{float:left;width:100%;font-family:var(--caps);font-weight:700;letter-spacing:.12em;font-size:.82rem;color:var(--gold);margin:0;padding:0}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
 .row > *{min-width:0}
 @media (max-width:520px){.row{grid-template-columns:1fr}}
 label{display:grid;gap:6px;font-weight:600;font-size:.92rem}
@@ -111,6 +111,21 @@ details.cat[open] summary::after{content:"−"}
 .codigo span{font-size:.82rem;color:var(--muted);font-weight:600}
 .codigo b{font-family:var(--caps);font-size:1.45rem;letter-spacing:.06em;color:var(--gold-hi);user-select:all}
 .codigo small{color:var(--ink);font-size:.86rem}
+.campo{display:grid;gap:6px;font-weight:600;font-size:.92rem;min-width:0}
+.hora-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;font:inherit;font-weight:500;font-size:1rem;color:var(--ink);background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:12px 14px;cursor:pointer;text-align:left}
+.hora-btn.vacio{color:#8fa39b}
+.hora-btn svg{flex:none;color:var(--gold-hi)}
+.hora-btn:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.ruleta-caja{display:grid;gap:10px;padding:10px;border-radius:14px;background:rgba(0,0,0,.34);border:1px solid var(--line)}
+.ruleta{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.ruleta::before{content:"";position:absolute;left:0;right:0;top:80px;height:40px;border-radius:10px;background:rgba(236,176,56,.14);border:1px solid var(--gold);pointer-events:none}
+.rueda{height:200px;overflow-y:auto;scroll-snap-type:y mandatory;padding-block:80px;scrollbar-width:none;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;position:relative;-webkit-mask-image:linear-gradient(180deg,transparent,#000 32%,#000 68%,transparent);mask-image:linear-gradient(180deg,transparent,#000 32%,#000 68%,transparent)}
+.rueda::-webkit-scrollbar{display:none}
+.rueda:focus-visible{outline:2px solid var(--gold);outline-radius:8px}
+.rueda div{height:40px;line-height:40px;text-align:center;scroll-snap-align:center;font-size:1.2rem;font-weight:500;color:var(--muted);cursor:pointer;user-select:none}
+.rueda div.sel{color:var(--gold-hi);font-weight:700}
+.ruleta-ok{border:0;border-radius:999px;padding:11px;font-family:var(--caps);font-weight:700;letter-spacing:.06em;font-size:.86rem;cursor:pointer;color:var(--on-coral);background:linear-gradient(180deg,#4fd0bf,var(--coral) 50%,var(--coral-lo))}
+.ruleta-ok:focus-visible{outline:3px solid var(--gold-hi);outline-offset:2px}
 .hint{font-size:.82rem;color:var(--muted);margin:0}
 .err{color:var(--err);font-size:.85rem;min-height:1.2em;margin:10px 0 0}
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;cursor:pointer;text-decoration:none;
@@ -159,7 +174,7 @@ footer .eyebrow{font-size:.72rem}
       <legend>FECHA Y GRUPO</legend>
       <div class="row">
         <label for="fecha">Fecha<input type="date" id="fecha" name="fecha" required></label>
-        <label for="hora">Hora de llegada<input type="time" id="hora" name="hora" required></label>
+        <div class="campo"><span id="hora-t">Hora de llegada</span><input type="hidden" id="hora" name="hora"><button type="button" class="hora-btn" id="hora-btn" data-ruleta="hora" aria-expanded="false" aria-labelledby="hora-t hora-btn"><span id="hora-txt">Elegir hora</span><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="ruleta-caja" id="hora-caja" hidden></div></div>
       </div>
       <div class="row">
         <label for="personas">Número de personas<input type="number" id="personas" name="personas" min="2" max="300" inputmode="numeric" placeholder="Ej. 20" required></label>
@@ -189,7 +204,7 @@ footer .eyebrow{font-size:.72rem}
       <legend>ADELANTA TU PEDIDO</legend>
       <label class="check" for="adelantar"><input type="checkbox" id="adelantar"><span>Quiero dejar la comida y las bebidas pedidas para que estén listas a la hora <small>(opcional)</small></span></label>
       <div class="pedido" id="pedido" hidden>
-        <label for="servir">¿A qué hora servimos?<input type="time" id="servir" name="servir"></label>
+        <div class="campo"><span id="servir-t">¿A qué hora servimos?</span><input type="hidden" id="servir" name="servir"><button type="button" class="hora-btn" id="servir-btn" data-ruleta="servir" aria-expanded="false" aria-labelledby="servir-t servir-btn"><span id="servir-txt">Elegir hora</span><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="ruleta-caja" id="servir-caja" hidden></div></div>
         <div id="platos"></div>
         <div class="barra"><div><span>Total aproximado</span><b id="total">$0</b></div><div><span>Abono (50%)</span><b id="abono">$0</b></div></div>
         <div class="aviso"><strong>CONDICIONES DEL PEDIDO</strong><span><b>Abono del 50%:</b> obligatorio, dentro de las 24 horas siguientes a tu solicitud.</span><span><b>Si pides comida:</b> mínimo 4 horas de anticipación, o 48 horas si son 10 personas o más.</span><span><b>Solo bebidas:</b> sin anticipación mínima y puedes cancelar hasta 3 horas antes.</span><span><b>Si cancelas a tiempo</b> (3 horas antes de servir, o 24 horas si son 10 personas o más y piden comida), el abono se devuelve 24 horas después del día de tu reserva. Fuera de ese plazo no se devuelve.</span></div>
@@ -321,6 +336,44 @@ footer .eyebrow{font-size:.72rem}
   function hora12(v){
     try { var p = v.split(':'), h = +p[0], m = p[1]; var s = h >= 12 ? 'p. m.' : 'a. m.'; h = h % 12 || 12; return h + ':' + m + ' ' + s; } catch(e){ return v; }
   }
+  document.querySelectorAll('.hora-btn').forEach(function(btn){
+    var id = btn.dataset.ruleta, inp = document.getElementById(id), caja = document.getElementById(id + '-caja'), txt = document.getElementById(id + '-txt');
+    var H = 40, listas = [[1,2,3,4,5,6,7,8,9,10,11,12], [], ['a. m.','p. m.']], ruedas = [], hecho = false;
+    for (var m = 0; m < 60; m += 5) listas[1].push((m < 10 ? '0' : '') + m);
+    btn.classList.add('vacio');
+    function idx(r){ return Math.max(0, Math.min(r.children.length - 1, Math.round(r.scrollTop / H))); }
+    function leer(){
+      var h = listas[0][idx(ruedas[0])], mi = listas[1][idx(ruedas[1])], pm = idx(ruedas[2]) === 1;
+      var h24 = (h % 12) + (pm ? 12 : 0);
+      inp.value = (h24 < 10 ? '0' : '') + h24 + ':' + mi;
+      txt.textContent = h + ':' + mi + ' ' + listas[2][pm ? 1 : 0];
+      btn.classList.remove('vacio');
+      ruedas.forEach(function(r){ var k = idx(r); Array.prototype.forEach.call(r.children, function(c, n){ c.classList.toggle('sel', n === k); }); });
+    }
+    function armar(){
+      if (hecho) return; hecho = true;
+      var wrap = document.createElement('div'); wrap.className = 'ruleta';
+      ['Hora','Minutos','a. m. o p. m.'].forEach(function(et, c){
+        var r = document.createElement('div'); r.className = 'rueda'; r.id = id + '-rueda' + c; r.tabIndex = 0; r.setAttribute('aria-label', et);
+        listas[c].forEach(function(v, n){ var d = document.createElement('div'); d.textContent = v; d.addEventListener('click', function(){ r.scrollTo({top: n * H, behavior: 'smooth'}); }); r.appendChild(d); });
+        r.addEventListener('scroll', leer, {passive: true});
+        ruedas.push(r); wrap.appendChild(r);
+      });
+      var ok = document.createElement('button'); ok.type = 'button'; ok.className = 'ruleta-ok'; ok.textContent = 'LISTO';
+      ok.addEventListener('click', function(){ cerrar(); btn.focus(); });
+      caja.appendChild(wrap); caja.appendChild(ok);
+    }
+    function cerrar(){ caja.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+    btn.addEventListener('click', function(){
+      if (!caja.hidden) { cerrar(); return; }
+      armar(); caja.hidden = false; btn.setAttribute('aria-expanded', 'true');
+      var base = inp.value || (id === 'servir' && document.getElementById('hora').value) || '19:00', p = base.split(':'), h24 = +p[0];
+      ruedas[0].scrollTop = (((h24 % 12) || 12) - 1) * H;
+      ruedas[1].scrollTop = Math.round(+p[1] / 5) * H;
+      ruedas[2].scrollTop = (h24 >= 12 ? 1 : 0) * H;
+      leer();
+    });
+  });
   function codigo(fecha){
     var abc = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', n = new Uint8Array(4), r = '';
     try { crypto.getRandomValues(n); } catch(e){ for (var i = 0; i < 4; i++) n[i] = Math.floor(Math.random() * 256); }
